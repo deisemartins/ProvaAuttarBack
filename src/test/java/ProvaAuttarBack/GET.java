@@ -1,5 +1,6 @@
 package ProvaAuttarBack;
 
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -13,7 +14,8 @@ public class GET {
                 .header("Content-Type", "application/json")
                 .get("https://reqres.in/api/users?page=2")
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
+                .body("data",is(notNullValue()))
                 .body("data.id[0]", equalTo(7))
                 .body("data.first_name", hasItems("Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"))
                 .log().all();
@@ -25,7 +27,7 @@ public class GET {
                 .header("Content-Type", "application/json")
                 .get("https://reqres.in/api/users/2")
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("data.id", equalTo(2))
                 .body("data.email", equalTo("janet.weaver@reqres.in"))
                 .body("data.first_name", equalTo("Janet"))
@@ -41,7 +43,7 @@ public class GET {
                 .header("Content-Type", "application/json")
                 .get("https://reqres.in/api/users/23")
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
         }
 
     @Test
@@ -50,9 +52,8 @@ public class GET {
                 .header("Content-Type", "application/json")
                 .get("https://reqres.in/api/unknown")
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("page", equalTo(1))
-                .body("per_page", equalTo(6))
                 .body("total", equalTo(12))
                 .body("total_pages", equalTo(2));
     }
@@ -62,7 +63,7 @@ public class GET {
                 .header("Content-Type", "application/json")
                 .get("https://reqres.in/api/unknown/2")
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("data.id", equalTo(2))
                 .body("data.name", equalTo("fuchsia rose"))
                 .body("data.year", equalTo(2001))
@@ -76,7 +77,7 @@ public class GET {
                 .header("Content-Type", "application/json")
                 .get("https://reqres.in/api/unknown/23")
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
@@ -85,9 +86,8 @@ public class GET {
                 .header("Content-Type", "application/json")
                 .get("https://reqres.in/api/users?delay=3")
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("page", equalTo(1))
-                .body("per_page", equalTo(6))
                 .body("total", equalTo(12))
                 .body("total_pages", equalTo(2))
                 .body("data.id[0]", equalTo(1))
