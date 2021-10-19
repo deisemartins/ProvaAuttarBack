@@ -1,12 +1,19 @@
-package ProvaAuttarBack;
+package ProvaAuttarBack.tests;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
 import org.json.simple.JSONObject;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 
 public class PUT_PATCH {
+    @BeforeClass
+    public static void setUp() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
 
     @Test
     public void updatePut () {
@@ -25,8 +32,7 @@ public class PUT_PATCH {
                 .when()
                 .put("https://reqres.in/api/users/2")
                 .then()
-                .statusCode(200)
-                .log().all();
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
@@ -46,8 +52,7 @@ public class PUT_PATCH {
                 .when()
                 .patch("https://reqres.in/api/users/3")
                 .then()
-                .statusCode(200)
-                .log().all();
+                .statusCode(HttpStatus.SC_OK);
     }
 }
 

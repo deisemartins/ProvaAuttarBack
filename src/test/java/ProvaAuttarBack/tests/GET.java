@@ -1,31 +1,38 @@
-package ProvaAuttarBack;
+package ProvaAuttarBack.tests;
 
+import io.restassured.RestAssured;
 import org.apache.http.HttpStatus;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 public class GET {
+    @BeforeClass
+    public static void setUp() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        baseURI = "https://reqres.in";
+        basePath = "/api";
+    }
 
     @Test
     public void listUser() {
         given()
                 .header("Content-Type", "application/json")
-                .get("https://reqres.in/api/users?page=2")
+                .get("/users?page=2")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("data",is(notNullValue()))
                 .body("data.id[0]", equalTo(7))
-                .body("data.first_name", hasItems("Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"))
-                .log().all();
+                .body("data.first_name", hasItems("Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"));
     }
 
     @Test
     public void singleUser() {
         given()
                 .header("Content-Type", "application/json")
-                .get("https://reqres.in/api/users/2")
+                .get("/users/2")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("data.id", equalTo(2))
@@ -41,7 +48,7 @@ public class GET {
     public void singleUserNotFound() {
         given()
                 .header("Content-Type", "application/json")
-                .get("https://reqres.in/api/users/23")
+                .get("/users/23")
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
         }
@@ -50,7 +57,7 @@ public class GET {
     public void list() {
         given()
                 .header("Content-Type", "application/json")
-                .get("https://reqres.in/api/unknown")
+                .get("/unknown")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("page", equalTo(1))
@@ -61,7 +68,7 @@ public class GET {
     public void singleList() {
         given()
                 .header("Content-Type", "application/json")
-                .get("https://reqres.in/api/unknown/2")
+                .get("/unknown/2")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("data.id", equalTo(2))
@@ -75,7 +82,7 @@ public class GET {
     public void singleListNotFound() {
         given()
                 .header("Content-Type", "application/json")
-                .get("https://reqres.in/api/unknown/23")
+                .get("/unknown/23")
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
@@ -84,7 +91,7 @@ public class GET {
     public void delayedResponse() {
         given()
                 .header("Content-Type", "application/json")
-                .get("https://reqres.in/api/users?delay=3")
+                .get("/users?delay=3")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("page", equalTo(1))

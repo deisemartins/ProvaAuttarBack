@@ -1,12 +1,19 @@
-package ProvaAuttarBack;
+package ProvaAuttarBack.tests;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
 import org.json.simple.JSONObject;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import  static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
 
 public class POST {
+    @BeforeClass
+    public static void setUp() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
 
     @Test
     public void create () {
@@ -15,7 +22,6 @@ public class POST {
 
         requestJsonObject.put("name", "João");
         requestJsonObject.put("job", "Analista");
-        System.out.println(requestJsonObject);
 
         given()
                 .header("Content-Type", "Application/json")
@@ -25,7 +31,7 @@ public class POST {
                 .when()
                 .post("https://reqres.in/api/users")
                 .then()
-                .statusCode(201)
+                .statusCode(HttpStatus.SC_CREATED)
                 .body("name", equalTo("João"))
                 .body("job", equalTo("Analista"));
     }
@@ -36,7 +42,6 @@ public class POST {
         JSONObject requestJsonObject = new JSONObject();
 
         requestJsonObject.put("job", "Analista");
-        System.out.println(requestJsonObject);
 
         given()
                 .header("Content-Type", "Application/json")
@@ -46,9 +51,8 @@ public class POST {
                 .when()
                 .post("https://reqres.in/api/users")
                 .then()
-                .statusCode(201)
-                .body("job", equalTo("Analista"))
-                .log().all();
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("job", equalTo("Analista"));
     }
 
     @Test
@@ -57,7 +61,6 @@ public class POST {
         JSONObject requestJsonObject = new JSONObject();
 
         requestJsonObject.put("name", "Maria");
-        System.out.println(requestJsonObject);
 
         given()
                 .header("Content-Type", "Application/json")
@@ -67,9 +70,8 @@ public class POST {
                 .when()
                 .post("https://reqres.in/api/users")
                 .then()
-                .statusCode(201)
-                .body("name", equalTo("Maria"))
-                .log().all();
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("name", equalTo("Maria"));
     }
 
     @Test
@@ -79,7 +81,6 @@ public class POST {
 
         requestJsonObject.put("email", "eve.holt@reqres.in");
         requestJsonObject.put("password", "pistol");
-        System.out.println(requestJsonObject);
 
         given()
                 .header("Content-Type", "Application/json")
@@ -89,7 +90,7 @@ public class POST {
                 .when()
                 .post("https://reqres.in/api/register")
                 .then()
-                .statusCode(200);
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
@@ -98,7 +99,6 @@ public class POST {
         JSONObject requestJsonObject = new JSONObject();
 
         requestJsonObject.put("email", "sydney@fife");
-        System.out.println(requestJsonObject);
 
         given()
                 .header("Content-Type", "Application/json")
@@ -108,7 +108,7 @@ public class POST {
                 .when()
                 .post("https://reqres.in/api/register")
                 .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("error", equalTo("Missing password"));
     }
 
@@ -119,7 +119,6 @@ public class POST {
 
         requestJsonObject.put("email", "eve.holt@reqres.in");
         requestJsonObject.put("password", "cityslicka");
-        System.out.println(requestJsonObject);
 
         given()
                 .header("Content-Type", "Application/json")
@@ -129,7 +128,7 @@ public class POST {
                 .when()
                 .post("https://reqres.in/api/login")
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("token", equalTo("QpwL5tke4Pnpja7X4"));
     }
 
@@ -139,7 +138,6 @@ public class POST {
         JSONObject requestJsonObject = new JSONObject();
 
         requestJsonObject.put("email", "peter@klaven");
-        System.out.println(requestJsonObject);
 
         given()
                 .header("Content-Type", "Application/json")
@@ -149,7 +147,7 @@ public class POST {
                 .when()
                 .post("https://reqres.in/api/login")
                 .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("error", equalTo("Missing password"));
     }
 }
