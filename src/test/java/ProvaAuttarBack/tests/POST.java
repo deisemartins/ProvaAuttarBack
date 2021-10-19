@@ -14,6 +14,10 @@ import ProvaAuttarBack.support.user;
 
 public class POST extends BaseTest {
 
+    private static final String CREATE_USERS = "/users";
+    private static final String REGISTER_USER = "/register";
+    private static final String LOGIN_USER = "/login";
+
     @Test
     public void create () {
         JSONObject requestJsonObject = new JSONObject();
@@ -22,10 +26,9 @@ public class POST extends BaseTest {
         requestJsonObject.put("job", "Analista");
 
         given().
-                contentType(ContentType.JSON).
                 body(requestJsonObject).
                 when().
-                post("/users").
+                post(CREATE_USERS).
                 then().
                 statusCode(HttpStatus.SC_CREATED).
                 body("name", is("João")).
@@ -40,12 +43,9 @@ public class POST extends BaseTest {
         requestJsonObject.put("job", "Analista");
 
         given()
-                .header("Content-Type", "Application/json")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("/users")
+                .post(CREATE_USERS)
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .body("job", equalTo("Analista"));
@@ -59,12 +59,9 @@ public class POST extends BaseTest {
         requestJsonObject.put("name", "Maria");
 
         given()
-                .header("Content-Type", "Application/json")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("/users")
+                .post(CREATE_USERS)
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .body("name", equalTo("Maria"));
@@ -79,12 +76,9 @@ public class POST extends BaseTest {
         requestJsonObject.put("password", "pistol");
 
         given()
-                .header("Content-Type", "Application/json")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("/register")
+                .post(REGISTER_USER)
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
@@ -95,31 +89,14 @@ public class POST extends BaseTest {
         user.setEmail("sydney@fife");
 
         given().
-                contentType(ContentType.JSON).
                 body(user).
                 when().
-                post("/register").
+                post(REGISTER_USER).
                 then().
                 statusCode(HttpStatus.SC_BAD_REQUEST).
                 body("error", is("Missing password"));
 
     }
-
-        /*JSONObject requestJsonObject = new JSONObject();
-
-        requestJsonObject.put("email", "sydney@fife");
-
-        given()
-                .header("Content-Type", "Application/json")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .body(requestJsonObject.toJSONString())
-                .when()
-                .post("/register")
-                .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("error", equalTo("Missing password"));
-    }*/
 
     @Test
     public void loginSuccessful () {
@@ -130,12 +107,9 @@ public class POST extends BaseTest {
         requestJsonObject.put("password", "cityslicka");
 
         given()
-                .header("Content-Type", "Application/json")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("/login")
+                .post(LOGIN_USER)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("token", equalTo("QpwL5tke4Pnpja7X4"));
@@ -149,12 +123,9 @@ public class POST extends BaseTest {
         requestJsonObject.put("email", "peter@klaven");
 
         given()
-                .header("Content-Type", "Application/json")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("/login")
+                .post(LOGIN_USER)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("error", equalTo("Missing password"));

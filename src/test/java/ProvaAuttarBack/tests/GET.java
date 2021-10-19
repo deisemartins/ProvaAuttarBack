@@ -5,16 +5,19 @@ import org.apache.http.HttpStatus;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.PrimitiveIterator;
+
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 public class GET extends BaseTest {
+    private static final String LIST_USERS = "/users";
+    private static final String LIST_USER = "/unknown";
 
     @Test
     public void listUser() {
         given()
-                .header("Content-Type", "application/json")
-                .get("/users?page=2")
+                .get(LIST_USERS + "?page=2")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("data",is(notNullValue()))
@@ -25,8 +28,7 @@ public class GET extends BaseTest {
     @Test
     public void singleUser() {
         given()
-                .header("Content-Type", "application/json")
-                .get("/users/2")
+                .get(LIST_USERS + "/2")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("data.id", equalTo(2))
@@ -41,8 +43,7 @@ public class GET extends BaseTest {
     @Test
     public void singleUserNotFound() {
         given()
-                .header("Content-Type", "application/json")
-                .get("/users/23")
+                .get(LIST_USERS + "/23")
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
         }
@@ -50,8 +51,7 @@ public class GET extends BaseTest {
     @Test
     public void list() {
         given()
-                .header("Content-Type", "application/json")
-                .get("/unknown")
+                .get(LIST_USER)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("page", equalTo(1))
@@ -61,8 +61,7 @@ public class GET extends BaseTest {
     @Test
     public void singleList() {
         given()
-                .header("Content-Type", "application/json")
-                .get("/unknown/2")
+                .get(LIST_USER + "/2")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("data.id", equalTo(2))
@@ -75,8 +74,7 @@ public class GET extends BaseTest {
     @Test
     public void singleListNotFound() {
         given()
-                .header("Content-Type", "application/json")
-                .get("/unknown/23")
+                .get(LIST_USER+ "/23")
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
@@ -84,8 +82,7 @@ public class GET extends BaseTest {
     @Test
     public void delayedResponse() {
         given()
-                .header("Content-Type", "application/json")
-                .get("/users?delay=3")
+                .get(LIST_USERS +"?delay=3")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("page", equalTo(1))

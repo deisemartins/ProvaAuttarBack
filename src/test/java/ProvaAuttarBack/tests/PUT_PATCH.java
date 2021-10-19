@@ -11,6 +11,8 @@ import static io.restassured.RestAssured.*;
 
 public class PUT_PATCH extends BaseTest {
 
+    private static final String LIST_USERS_ENDPOINT = "/users";
+
     @Test
     public void updatePut () {
 
@@ -21,12 +23,9 @@ public class PUT_PATCH extends BaseTest {
         System.out.println(requestJsonObject);
 
         given()
-                .header("Content-Type", "Application/json")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .put("/users/2")
+                .put(LIST_USERS_ENDPOINT +"/2")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
@@ -41,12 +40,9 @@ public class PUT_PATCH extends BaseTest {
         System.out.println(requestJsonObject);
 
         given()
-                .header("Content-Type", "Application/json")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .patch("/users/3")
+                .patch(LIST_USERS_ENDPOINT +"/3")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
