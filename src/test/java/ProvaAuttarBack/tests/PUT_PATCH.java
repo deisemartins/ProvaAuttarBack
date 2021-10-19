@@ -7,13 +7,9 @@ import org.json.simple.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 
-public class PUT_PATCH {
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
+public class PUT_PATCH extends BaseTest {
 
     @Test
     public void updatePut () {
@@ -30,7 +26,7 @@ public class PUT_PATCH {
                 .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .put("https://reqres.in/api/users/2")
+                .put("/users/2")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
@@ -50,7 +46,7 @@ public class PUT_PATCH {
                 .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .patch("https://reqres.in/api/users/3")
+                .patch("/users/3")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }

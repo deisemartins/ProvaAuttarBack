@@ -8,13 +8,7 @@ import org.junit.Test;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-public class GET {
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        baseURI = "https://reqres.in";
-        basePath = "/api";
-    }
+public class GET extends BaseTest {
 
     @Test
     public void listUser() {

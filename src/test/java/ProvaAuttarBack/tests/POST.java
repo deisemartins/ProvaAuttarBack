@@ -8,32 +8,28 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import  static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
-public class POST {
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
+import ProvaAuttarBack.support.user;
+
+public class POST extends BaseTest {
 
     @Test
     public void create () {
-
-       JSONObject requestJsonObject = new JSONObject();
+        JSONObject requestJsonObject = new JSONObject();
 
         requestJsonObject.put("name", "João");
         requestJsonObject.put("job", "Analista");
 
-        given()
-                .header("Content-Type", "Application/json")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .body(requestJsonObject.toJSONString())
-                .when()
-                .post("https://reqres.in/api/users")
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .body("name", equalTo("João"))
-                .body("job", equalTo("Analista"));
+        given().
+                contentType(ContentType.JSON).
+                body(requestJsonObject).
+                when().
+                post("/users").
+                then().
+                statusCode(HttpStatus.SC_CREATED).
+                body("name", is("João")).
+                body("job", is("Analista"));
     }
 
     @Test
@@ -49,7 +45,7 @@ public class POST {
                 .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("https://reqres.in/api/users")
+                .post("/users")
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .body("job", equalTo("Analista"));
@@ -68,7 +64,7 @@ public class POST {
                 .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("https://reqres.in/api/users")
+                .post("/users")
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .body("name", equalTo("Maria"));
@@ -88,15 +84,28 @@ public class POST {
                 .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("https://reqres.in/api/register")
+                .post("/register")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
     public void registerUnsucessful () {
+        user user = new user();
+        user.setEmail("sydney@fife");
 
-        JSONObject requestJsonObject = new JSONObject();
+        given().
+                contentType(ContentType.JSON).
+                body(user).
+                when().
+                post("/register").
+                then().
+                statusCode(HttpStatus.SC_BAD_REQUEST).
+                body("error", is("Missing password"));
+
+    }
+
+        /*JSONObject requestJsonObject = new JSONObject();
 
         requestJsonObject.put("email", "sydney@fife");
 
@@ -106,11 +115,11 @@ public class POST {
                 .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("https://reqres.in/api/register")
+                .post("/register")
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("error", equalTo("Missing password"));
-    }
+    }*/
 
     @Test
     public void loginSuccessful () {
@@ -126,7 +135,7 @@ public class POST {
                 .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("https://reqres.in/api/login")
+                .post("/login")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("token", equalTo("QpwL5tke4Pnpja7X4"));
@@ -145,7 +154,7 @@ public class POST {
                 .accept(ContentType.JSON)
                 .body(requestJsonObject.toJSONString())
                 .when()
-                .post("https://reqres.in/api/login")
+                .post("/login")
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("error", equalTo("Missing password"));

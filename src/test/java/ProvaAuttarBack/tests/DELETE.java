@@ -6,19 +6,15 @@ import org.apache.http.protocol.HTTP;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.when;
+import static io.restassured.RestAssured.*;
 
-public class DELETE {
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
+public class DELETE extends BaseTest {
 
     @Test
     public void delete () {
 
         when()
-                .delete("https://reqres.in/api/users/2")
+                .delete("/users/2")
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
