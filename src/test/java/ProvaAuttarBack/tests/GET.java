@@ -16,36 +16,71 @@ public class GET extends BaseTest {
 
     @Test
     public void listUser() {
-        given()
-                .get(LIST_USERS + "?page=2")
-                .then()
-                .statusCode(HttpStatus.SC_OK)
-                .body("data",is(notNullValue()))
-                .body("data.id[0]", equalTo(7))
-                .body("data.first_name", hasItems("Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"));
+        given().
+                params("page", "2").
+            when().
+                get(LIST_USERS).
+                then().
+                statusCode(HttpStatus.SC_OK).
+                body("data",is(notNullValue())).
+                body("data.id[0]", equalTo(7));
+    }
+
+    @Test
+   public void listUserNumberOfItens() {
+        int expectedPage = 2;
+
+        int perPage = getPerPage(expectedPage);
+
+        given().
+                params("page", expectedPage).
+                when().get(LIST_USERS).
+                then().
+                statusCode(HttpStatus.SC_OK).
+                body(
+                        "page", is(expectedPage),
+                        "data.size()", is(perPage),
+                         "data.findAll { it.avatar.startsWith('https://reqres.in') }.size()", is(6)
+                );
+    }
+
+    private int getPerPage(int page) {
+        int perPage = given().
+                param("page", page).
+                when().
+                get(LIST_USERS).
+                then().
+                statusCode(HttpStatus.SC_OK).
+                extract().
+                path("per_page");
+        return perPage;
     }
 
     @Test
     public void singleUser() {
-        given()
-                .get(LIST_USERS + "/2")
-                .then()
-                .statusCode(HttpStatus.SC_OK)
-                .body("data.id", equalTo(2))
-                .body("data.email", equalTo("janet.weaver@reqres.in"))
-                .body("data.first_name", equalTo("Janet"))
-                .body("data.last_name", equalTo("Weaver"))
-                .body("data.avatar", equalTo("https://reqres.in/img/faces/2-image.jpg"))
-                .body("support.url", equalTo("https://reqres.in/#support-heading"))
-                .body("support.text", equalTo("To keep ReqRes free, contributions towards server costs are appreciated!"));
+        given().
+                params("id", 2).
+                when().
+                get(LIST_USERS).
+                then().
+                statusCode(HttpStatus.SC_OK).
+                body("data.id", equalTo(2)).
+                body("data.email", equalTo("janet.weaver@reqres.in")).
+                body("data.first_name", equalTo("Janet")).
+                body("data.last_name", equalTo("Weaver")).
+                body("data.avatar", equalTo("https://reqres.in/img/faces/2-image.jpg")).
+                body("support.url", equalTo("https://reqres.in/#support-heading")).
+                body("support.text", equalTo("To keep ReqRes free, contributions towards server costs are appreciated!"));
     }
 
     @Test
     public void singleUserNotFound() {
-        given()
-                .get(LIST_USERS + "/23")
-                .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
+        given().
+                params("id", 23).
+                when().
+                get(LIST_USERS).
+                then().
+                statusCode(HttpStatus.SC_NOT_FOUND);
         }
 
     @Test
@@ -60,23 +95,25 @@ public class GET extends BaseTest {
     }
     @Test
     public void singleList() {
-        given()
-                .get(LIST_USER + "/2")
-                .then()
-                .statusCode(HttpStatus.SC_OK)
-                .body("data.id", equalTo(2))
-                .body("data.name", equalTo("fuchsia rose"))
-                .body("data.year", equalTo(2001))
-                .body("data.color", equalTo("#C74375"))
-                .body("data.pantone_value", equalTo("17-2031"));
+        given().
+                params("id", 2).
+                get(LIST_USER).
+                then().
+                statusCode(HttpStatus.SC_OK).
+                body("data.id", equalTo(2)).
+                body("data.name", equalTo("fuchsia rose")).
+                body("data.year", equalTo(2001)).
+                body("data.color", equalTo("#C74375")).
+                body("data.pantone_value", equalTo("17-2031"));
     }
 
     @Test
     public void singleListNotFound() {
-        given()
-                .get(LIST_USER+ "/23")
-                .then()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
+        given().
+                params("id", 23).
+                get(LIST_USER).
+                then().
+                statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test

@@ -14,11 +14,14 @@ public class DELETE extends BaseTest {
 
     @Test
     public void delete () {
-
+        given().
+                params("id", "2").
         when()
-                .delete(LIST_USER + "/2")
+                .delete(LIST_USER)
                 .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+                .statusCode(HttpStatus.SC_NO_CONTENT)
+                .log().all();
+
     }
 }
 
